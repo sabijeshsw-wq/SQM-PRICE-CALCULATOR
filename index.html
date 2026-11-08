@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQM Price Calculator</title>
+<style>
+:root{font-family:Inter,Arial,sans-serif;color:#182230;background:#f3f6fa}
+*{box-sizing:border-box}
+body{margin:0;padding:24px}
+.wrap{max-width:1250px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:25px;margin:0 0 5px}
+.sub{color:#667085;font-size:13px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+button{border:0;border-radius:8px;padding:10px 15px;font-weight:650;cursor:pointer}
+.add{background:#175cd3;color:white}.reset{background:#e4e7ec;color:#344054}
+.panel{background:white;border:1px solid #e4e7ec;border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px #1018280a}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th{background:#f2f4f7;color:#475467;font-size:12px;text-align:left;padding:11px 9px;white-space:nowrap}
+td{padding:7px 8px;border-bottom:1px solid #eaecf0}
+td:first-child{text-align:center;color:#667085;width:55px}
+input{width:100%;min-width:85px;padding:9px 8px;border:1px solid #d0d5dd;border-radius:7px;font:inherit;font-size:14px}
+input:focus{outline:2px solid #84adff;border-color:#2e67d1}
+.calc{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;padding-right:14px}
+.totals{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:12px}
+.metric{background:#f8fafc;border:1px solid #eaecf0;border-radius:10px;padding:13px}
+.metric label{display:block;color:#667085;font-size:12px;margin-bottom:8px}
+.metric strong{font-size:21px;font-variant-numeric:tabular-nums}
+.metric.net{background:#ecfdf3;border-color:#abefc6}
+.metric.net strong{color:#067647}
+.adjustments{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px;margin:0 0 14px}
+.adjustments label{font-size:12px;color:#475467;display:block;margin-bottom:6px}
+.hint{font-size:12px;color:#667085;margin-top:12px}
+@media(max-width:650px){body{padding:13px}.totals{grid-template-columns:1fr 1fr}.metric.net{grid-column:1/-1}.adjustments{grid-template-columns:1fr 1fr}h1{font-size:21px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div><h1>SQM Price Calculator</h1><div class="sub">Enter dimensions in metres and rate per square metre.</div></div>
+ <div class="actions"><button class="add" id="addRow">+ Add row</button><button class="reset" id="reset">Clear calculator</button></div>
+</header>
+<section class="panel">
+ <div class="table-wrap">
+  <table>
+   <thead><tr><th>SL. NO.</th><th>WIDTH (M)</th><th>HEIGHT (M)</th><th>PRICE (KD / SQM)</th><th>SUB TOTAL (KD)</th></tr></thead>
+   <tbody id="items"></tbody>
+  </table>
+ </div>
+ <div class="hint">Subtotal = Width × Height × Price per SQM. Empty rows are ignored.</div>
+</section>
+<section class="panel">
+ <div class="adjustments">
+  <div><label for="discount">DISCOUNT (%)</label><input id="discount" type="number" min="0" max="100" step="0.01" value="0"></div>
+  <div><label for="addition">ADDITION (%)</label><input id="addition" type="number" min="0" step="0.01" value="0"></div>
+ </div>
+ <div class="totals">
+  <div class="metric"><label>TOTAL PRICE</label><strong id="total">KD 0.000</strong></div>
+  <div class="metric"><label>ADJUSTMENT</label><strong id="adjustment">KD 0.000</strong></div>
+  <div class="metric net"><label>NET TOTAL (KD)</label><strong id="net">KD 0.000</strong></div>
+ </div>
+ <div class="hint">Net total = Total price × (1 − Discount% + Addition%). Values are calculated in this browser only and are not uploaded or saved.</div>
+</section>
+</div>
+<script>
+const tbody=document.getElementById('items');
+const money=n=>'KD '+(Number.isFinite(n)?n:0).toFixed(3);
+function addRow(w='',h='',p=''){
+ const tr=document.createElement('tr'), no=tbody.children.length+1;
+ tr.innerHTML=`<td class="num">${no}</td>
+ <td><input type="number" min="0" step="any" inputmode="decimal" aria-label="Width row ${no}" placeholder="0.000"></td>
+ <td><input type="number" min="0" step="any" inputmode="decimal" aria-label="Height row ${no}" placeholder="0.000"></td>
+ <td><input type="number" min="0" step="any" inputmode="decimal" aria-label="Price row ${no}" placeholder="0.000"></td>
+ <td class="calc">KD 0.000</td>`;
+ const fields=tr.querySelectorAll('input'); [w,h,p].forEach((v,i)=>fields[i].value=v);
+ fields.forEach(el=>el.addEventListener('input',calculate));
+ tbody.appendChild(tr); calculate();
+}
+function val(el){const n=parseFloat(el.value);return Number.isFinite(n)&&n>0?n:0}
+function calculate(){
+ let total=0;
+ [...tbody.children].forEach(tr=>{
+  const f=tr.querySelectorAll('input'), w=val(f[0]),h=val(f[1]),p=val(f[2]);
+  const subtotal=w*h*p; total+=subtotal;
+  tr.querySelector('.calc').textContent=money(subtotal);
+ });
+ const d=Math.max(0,Math.min(100,parseFloat(document.getElementById('discount').value)||0))/100;
+ const a=Math.max(0,parseFloat(document.getElementById('addition').value)||0)/100;
+ const net=total*(1-d+a);
+ document.getElementById('total').textContent=money(total);
+ document.getElementById('net').textContent=money(net);
+ document.getElementById('adjustment').textContent=money(net-total);
+}
+function blank(){
+ tbody.innerHTML='';
+ for(let i=0;i<50;i++) addRow();
+ document.getElementById('discount').value='0';
+ document.getElementById('addition').value='0';
+ calculate();
+}
+document.getElementById('addRow').addEventListener('click',()=>addRow());
+document.getElementById('reset').addEventListener('click',blank);
+document.getElementById('discount').addEventListener('input',calculate);
+document.getElementById('addition').addEventListener('input',calculate);
+// No localStorage, cookies, server calls, or persistent user data.
+blank();
+</script>
+</body>
+</html>
