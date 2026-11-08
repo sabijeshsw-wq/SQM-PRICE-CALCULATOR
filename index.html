@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SQM Price Calculator</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;padding:24px;background:#f3f6fa;color:#182230;font-family:Arial,sans-serif}
@@ -17,7 +18,7 @@ button{border:0;border-radius:8px;padding:10px 15px;font-weight:bold;cursor:poin
 .reset{background:#e4e7ec;color:#344054}
 .panel{background:white;border:1px solid #e4e7ec;border-radius:14px;padding:16px;margin-bottom:16px}
 .section-title{font-size:17px;margin:0 0 14px}
-.adjustments{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px;margin-bottom:16px}
+.adjustments{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px;margin-top:16px}
 label{display:block;color:#475467;font-size:12px;margin-bottom:6px}
 input,select{width:100%;padding:10px 9px;border:1px solid #d0d5dd;border-radius:7px;font:inherit;font-size:14px;background:white}
 .totals{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:12px}
@@ -33,6 +34,7 @@ td{padding:7px 8px;border-bottom:1px solid #eaecf0}
 td:first-child{text-align:center;color:#667085;width:55px}
 .calc{text-align:right;white-space:nowrap;padding-right:14px;font-variant-numeric:tabular-nums}
 .hint{font-size:12px;color:#667085;margin-top:12px}
+
 @media(max-width:650px){
 body{padding:13px}
 header{align-items:flex-start}
@@ -45,6 +47,7 @@ h1{font-size:21px}
 }
 </style>
 </head>
+
 <body>
 <div class="wrap">
 
@@ -61,28 +64,37 @@ h1{font-size:21px}
 
 <section class="panel">
   <h3 class="section-title">Results</h3>
-  <div class="adjustments">
-    <div>
-      <label for="discount">Discount (%)</label>
-      <input id="discount" type="number" min="0" step="any" value="0" oninput="calculate()">
-    </div>
-    <div>
-      <label for="addition">Addition (%)</label>
-      <input id="addition" type="number" min="0" step="any" value="0" oninput="calculate()">
-    </div>
-  </div>
+
+  <!-- TOTALS FIRST -->
   <div class="totals">
     <div class="metric">
       <label>Total Price (KD)</label>
       <strong id="total">0.000</strong>
     </div>
+
     <div class="metric">
       <label>Adjustment (KD)</label>
       <strong id="adjustment">0.000</strong>
     </div>
+
     <div class="metric net">
       <label>Net Total (KD)</label>
       <strong id="netTotal">0.000</strong>
+    </div>
+  </div>
+
+  <!-- ADJUSTMENTS BELOW TOTALS -->
+  <div class="adjustments">
+    <div>
+      <label for="discount">Discount (%)</label>
+      <input id="discount" type="number" min="0" step="any"
+      value="0" oninput="calculate()">
+    </div>
+
+    <div>
+      <label for="addition">Addition (%)</label>
+      <input id="addition" type="number" min="0" step="any"
+      value="0" oninput="calculate()">
     </div>
   </div>
 </section>
@@ -102,12 +114,16 @@ h1{font-size:21px}
       <tbody id="tableBody"></tbody>
     </table>
   </div>
-  <div class="hint">Enter width and select height and price from the dropdowns.</div>
+
+  <div class="hint">
+    Enter width and select height and price from the dropdowns.
+  </div>
 </section>
 
 </div>
 
 <script>
+
 function addRow(){
   const tbody=document.getElementById("tableBody");
   const row=document.createElement("tr");
@@ -115,23 +131,34 @@ function addRow(){
 
   row.innerHTML=`
     <td>${number}</td>
-    <td><input type="number" min="0" step="any" class="width" placeholder="Width" oninput="calculate()"></td>
+
+    <td>
+      <input type="number" min="0" step="any"
+      class="width" placeholder="Width"
+      oninput="calculate()">
+    </td>
+
     <td>
       <select class="height" onchange="calculate()">
+        <option value="" selected disabled>Select</option>
         <option value="0.7">0.7</option>
         <option value="1.4">1.4</option>
         <option value="2.1">2.1</option>
         <option value="2.8">2.8</option>
       </select>
     </td>
+
     <td>
       <select class="price" onchange="calculate()">
+        <option value="" selected disabled>Select</option>
         <option value="50">50</option>
         <option value="135">135</option>
       </select>
     </td>
+
     <td class="calc subtotal">0.000</td>
   `;
+
   tbody.appendChild(row);
   calculate();
 }
@@ -143,6 +170,7 @@ function calculate(){
     const width=parseFloat(row.querySelector(".width").value)||0;
     const height=parseFloat(row.querySelector(".height").value)||0;
     const price=parseFloat(row.querySelector(".price").value)||0;
+
     const subtotal=width*height*price;
 
     row.querySelector(".subtotal").textContent=subtotal.toFixed(3);
@@ -168,14 +196,17 @@ function clearAll(){
   for(let i=0;i<50;i++){
     addRow();
   }
+
   calculate();
 }
 
+// Initial 50 blank rows
 for(let i=0;i<50;i++){
   addRow();
 }
-calculate();
-</script>
 
+calculate();
+
+</script>
 </body>
 </html>
