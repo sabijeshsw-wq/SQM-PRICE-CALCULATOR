@@ -31,22 +31,32 @@ header {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+header > div:first-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 h1 {
   font-size: 25px;
+  line-height: 1.2;
   margin: 0 0 5px;
+  padding: 0;
 }
 
-.sub, .hint {
+.sub {
   color: #667085;
   font-size: 13px;
+  line-height: 1.4;
 }
 
 .actions {
   display: flex;
+  align-items: center;
   gap: 8px;
 }
 
