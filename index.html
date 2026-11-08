@@ -329,8 +329,17 @@ function clearAll() {
   calculate();
 }
 
-// Start with 50 blank rows
-for (let i = 0; i < 50; i++) addRow();
+// Create 50 blank rows after the page loads
+document.addEventListener("DOMContentLoaded", function() {
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+
+  for (let i = 0; i < 50; i++) {
+    addRow();
+  }
+
+  calculate();
+});
 </script>
 
 </body>
