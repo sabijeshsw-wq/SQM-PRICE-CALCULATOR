@@ -4,395 +4,177 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SQM Price Calculator</title>
-
 <style>
-:root {
-  font-family: Inter, Arial, sans-serif;
-  color: #182230;
-  background: #f3f6fa;
-}
-* { box-sizing: border-box; }
-body { margin: 0; padding: 20px; }
-.wrap { max-width: 1250px; margin: auto; }
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-header > div:first-child {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-h1 {
-  font-size: 25px;
-  line-height: 1.2;
-  margin: 0 0 5px;
-}
-.sub {
-  color: #667085;
-  font-size: 13px;
-  line-height: 1.4;
-}
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-button {
-  border: 0;
-  border-radius: 8px;
-  padding: 10px 15px;
-  font-weight: 650;
-  cursor: pointer;
-  font-size: 14px;
-}
-.add { background: #175cd3; color: white; }
-.reset { background: #e4e7ec; color: #344054; }
-button:hover { opacity: .88; }
-
-.panel {
-  background: white;
-  border: 1px solid #e4e7ec;
-  border-radius: 14px;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px #1018280a;
-}
-
-/* RESULTS AT TOP */
-.section-title {
-  font-size: 17px;
-  font-weight: 700;
-  margin: 0 0 14px;
-}
-.adjustments {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  max-width: 520px;
-  margin-bottom: 16px;
-}
-.adjustments label {
-  display: block;
-  font-size: 12px;
-  color: #475467;
-  margin-bottom: 6px;
-}
-
-input, select {
-  width: 100%;
-  padding: 10px 9px;
-  border: 1px solid #d0d5dd;
-  border-radius: 7px;
-  font: inherit;
-  font-size: 14px;
-  background: white;
-}
-input:focus, select:focus {
-  outline: 2px solid #84adff;
-  border-color: #2e67d1;
-}
-
-.totals {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(150px, 1fr));
-  gap: 12px;
-}
-.metric {
-  background: #f8fafc;
-  border: 1px solid #eaecf0;
-  border-radius: 10px;
-  padding: 14px;
-}
-.metric label {
-  display: block;
-  color: #667085;
-  font-size: 12px;
-  margin-bottom: 8px;
-}
-.metric strong {
-  font-size: 21px;
-  font-variant-numeric: tabular-nums;
-}
-.metric.net {
-  background: #ecfdf3;
-  border-color: #abefc6;
-}
-.metric.net strong { color: #067647; }
-
-/* TABLE */
-.table-wrap { overflow-x: auto; }
-table {
-  border-collapse: collapse;
-  width: 100%;
-  min-width: 760px;
-}
-th {
-  background: #f2f4f7;
-  color: #475467;
-  font-size: 12px;
-  text-align: left;
-  padding: 12px 9px;
-  white-space: nowrap;
-}
-td {
-  padding: 7px 8px;
-  border-bottom: 1px solid #eaecf0;
-}
-td:first-child {
-  text-align: center;
-  color: #667085;
-  width: 55px;
-}
-td input, td select { min-width: 85px; }
-.calc {
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-  white-space: nowrap;
-  padding-right: 14px;
-}
-.hint {
-  font-size: 12px;
-  color: #667085;
-  margin-top: 12px;
-}
-
-@media(max-width: 650px) {
-  body { padding: 12px; }
-  header { align-items: flex-start; }
-  h1 { font-size: 21px; }
-  .actions { width: 100%; }
-  .actions button { flex: 1; }
-  .totals { grid-template-columns: 1fr 1fr; }
-  .metric.net { grid-column: 1 / -1; }
-  .metric strong { font-size: 19px; }
-  .adjustments { grid-template-columns: 1fr 1fr; }
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:#f3f6fa;color:#182230;font-family:Arial,sans-serif}
+.wrap{max-width:1250px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+h1{font-size:25px;margin:0 0 5px}
+.sub{color:#667085;font-size:13px}
+.actions{display:flex;gap:8px}
+button{border:0;border-radius:8px;padding:10px 15px;font-weight:bold;cursor:pointer}
+.add{background:#175cd3;color:white}
+.reset{background:#e4e7ec;color:#344054}
+.panel{background:white;border:1px solid #e4e7ec;border-radius:14px;padding:16px;margin-bottom:16px}
+.section-title{font-size:17px;margin:0 0 14px}
+.adjustments{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px;margin-bottom:16px}
+label{display:block;color:#475467;font-size:12px;margin-bottom:6px}
+input,select{width:100%;padding:10px 9px;border:1px solid #d0d5dd;border-radius:7px;font:inherit;font-size:14px;background:white}
+.totals{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:12px}
+.metric{background:#f8fafc;border:1px solid #eaecf0;border-radius:10px;padding:13px}
+.metric label{color:#667085}
+.metric strong{font-size:21px;font-variant-numeric:tabular-nums}
+.metric.net{background:#ecfdf3;border-color:#abefc6}
+.metric.net strong{color:#067647}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th{background:#f2f4f7;color:#475467;font-size:12px;text-align:left;padding:11px 9px;white-space:nowrap}
+td{padding:7px 8px;border-bottom:1px solid #eaecf0}
+td:first-child{text-align:center;color:#667085;width:55px}
+.calc{text-align:right;white-space:nowrap;padding-right:14px;font-variant-numeric:tabular-nums}
+.hint{font-size:12px;color:#667085;margin-top:12px}
+@media(max-width:650px){
+body{padding:13px}
+header{align-items:flex-start}
+h1{font-size:21px}
+.actions{width:100%}
+.actions button{flex:1}
+.totals{grid-template-columns:1fr 1fr}
+.metric.net{grid-column:1/-1}
+.metric strong{font-size:19px}
 }
 </style>
 </head>
-
 <body>
 <div class="wrap">
 
-  <!-- TITLE -->
-  <header>
+<header>
+  <div>
+    <h1>SQM Price Calculator</h1>
+    <div class="sub">Width × Height × Price per SQM</div>
+  </div>
+  <div class="actions">
+    <button class="add" onclick="addRow()">+ Add Row</button>
+    <button class="reset" onclick="clearAll()">Clear</button>
+  </div>
+</header>
+
+<section class="panel">
+  <h3 class="section-title">Results</h3>
+  <div class="adjustments">
     <div>
-      <h1>SQM Price Calculator</h1>
-      <div class="sub">Width × Height × Price per SQM</div>
+      <label for="discount">Discount (%)</label>
+      <input id="discount" type="number" min="0" step="any" value="0" oninput="calculate()">
     </div>
-    <div class="actions">
-      <button class="add" id="addButton">+ Add Row</button>
-      <button class="reset" id="clearButton">Clear</button>
+    <div>
+      <label for="addition">Addition (%)</label>
+      <input id="addition" type="number" min="0" step="any" value="0" oninput="calculate()">
     </div>
-  </header>
+  </div>
+  <div class="totals">
+    <div class="metric">
+      <label>Total Price (KD)</label>
+      <strong id="total">0.000</strong>
+    </div>
+    <div class="metric">
+      <label>Adjustment (KD)</label>
+      <strong id="adjustment">0.000</strong>
+    </div>
+    <div class="metric net">
+      <label>Net Total (KD)</label>
+      <strong id="netTotal">0.000</strong>
+    </div>
+  </div>
+</section>
 
-  <!-- COMPLETE RESULTS SECTION AT TOP -->
-  <section class="panel">
-    <h3 class="section-title">Results</h3>
-
-    <div class="adjustments">
-      <div>
-        <label for="discount">Discount (%)</label>
-        <input id="discount" type="number" min="0"
-               step="any" value="0">
-      </div>
-      <div>
-        <label for="addition">Addition (%)</label>
-        <input id="addition" type="number" min="0"
-               step="any" value="0">
-      </div>
-    </div>
-
-    <div class="totals">
-      <div class="metric">
-        <label>Total Price (KD)</label>
-        <strong id="total">0.000</strong>
-      </div>
-      <div class="metric">
-        <label>Adjustment (KD)</label>
-        <strong id="adjustment">0.000</strong>
-      </div>
-      <div class="metric net">
-        <label>Net Total (KD)</label>
-        <strong id="netTotal">0.000</strong>
-      </div>
-    </div>
-  </section>
-
-  <!-- CALCULATOR TABLE -->
-  <section class="panel">
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>SL. NO.</th>
-            <th>WIDTH (M)</th>
-            <th>HEIGHT (M)</th>
-            <th>PRICE (KD / SQM)</th>
-            <th>SUB TOTAL (KD)</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
-
-    <div class="hint">
-      Enter width and select height and price from the dropdowns.
-      Calculations update automatically.
-    </div>
-  </section>
+<section class="panel">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>SL. NO.</th>
+          <th>WIDTH (M)</th>
+          <th>HEIGHT (M)</th>
+          <th>PRICE (KD / SQM)</th>
+          <th>SUB TOTAL (KD)</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+  <div class="hint">Enter width and select height and price from the dropdowns.</div>
+</section>
 
 </div>
 
 <script>
-(function () {
+function addRow(){
+  const tbody=document.getElementById("tableBody");
+  const row=document.createElement("tr");
+  const number=tbody.children.length+1;
 
-  const heightOptions = [0.7, 1.4, 2.1, 2.8];
-  const priceOptions = [50, 135];
-
-  const tbody = document.getElementById("tableBody");
-  const discountInput = document.getElementById("discount");
-  const additionInput = document.getElementById("addition");
-
-  function calculate() {
-    let total = 0;
-
-    tbody.querySelectorAll("tr").forEach(function(row) {
-      const width =
-        parseFloat(row.querySelector(".width").value) || 0;
-
-      const height =
-        parseFloat(row.querySelector(".height").value) || 0;
-
-      const price =
-        parseFloat(row.querySelector(".price").value) || 0;
-
-      const subtotal = width * height * price;
-
-      row.querySelector(".subtotal").textContent =
-        subtotal.toFixed(3);
-
-      total += subtotal;
-    });
-
-    const discount =
-      Math.max(0, parseFloat(discountInput.value) || 0);
-
-    const addition =
-      Math.max(0, parseFloat(additionInput.value) || 0);
-
-    const net = total * (1 - discount / 100 + addition / 100);
-    const adjustment = net - total;
-
-    document.getElementById("total").textContent =
-      total.toFixed(3);
-
-    document.getElementById("adjustment").textContent =
-      adjustment.toFixed(3);
-
-    document.getElementById("netTotal").textContent =
-      net.toFixed(3);
-  }
-
-  function addRow() {
-    const row = document.createElement("tr");
-    const number = tbody.children.length + 1;
-
-    const heightSelect = document.createElement("select");
-    heightSelect.className = "height";
-
-    heightOptions.forEach(function(value) {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = value.toFixed(1);
-      heightSelect.appendChild(option);
-    });
-
-    const priceSelect = document.createElement("select");
-    priceSelect.className = "price";
-
-    priceOptions.forEach(function(value) {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = value;
-      priceSelect.appendChild(option);
-    });
-
-    const widthInput = document.createElement("input");
-    widthInput.type = "number";
-    widthInput.min = "0";
-    widthInput.step = "any";
-    widthInput.placeholder = "Width";
-    widthInput.className = "width";
-
-    const numberCell = document.createElement("td");
-    numberCell.textContent = number;
-
-    const widthCell = document.createElement("td");
-    widthCell.appendChild(widthInput);
-
-    const heightCell = document.createElement("td");
-    heightCell.appendChild(heightSelect);
-
-    const priceCell = document.createElement("td");
-    priceCell.appendChild(priceSelect);
-
-    const subtotalCell = document.createElement("td");
-    subtotalCell.className = "calc subtotal";
-    subtotalCell.textContent = "0.000";
-
-    row.append(
-      numberCell,
-      widthCell,
-      heightCell,
-      priceCell,
-      subtotalCell
-    );
-
-    tbody.appendChild(row);
-  }
-
-  function clearAll() {
-    tbody.innerHTML = "";
-    discountInput.value = 0;
-    additionInput.value = 0;
-
-    createInitialRows();
-    calculate();
-  }
-
-  function createInitialRows() {
-    for (let i = 0; i < 50; i++) {
-      addRow();
-    }
-  }
-
-  // Event listeners
-  tbody.addEventListener("input", calculate);
-  tbody.addEventListener("change", calculate);
-
-  discountInput.addEventListener("input", calculate);
-  additionInput.addEventListener("input", calculate);
-
-  document.getElementById("addButton")
-    .addEventListener("click", function() {
-      addRow();
-      calculate();
-    });
-
-  document.getElementById("clearButton")
-    .addEventListener("click", clearAll);
-
-  // CREATE 50 ROWS IMMEDIATELY
-  createInitialRows();
+  row.innerHTML=`
+    <td>${number}</td>
+    <td><input type="number" min="0" step="any" class="width" placeholder="Width" oninput="calculate()"></td>
+    <td>
+      <select class="height" onchange="calculate()">
+        <option value="0.7">0.7</option>
+        <option value="1.4">1.4</option>
+        <option value="2.1">2.1</option>
+        <option value="2.8">2.8</option>
+      </select>
+    </td>
+    <td>
+      <select class="price" onchange="calculate()">
+        <option value="50">50</option>
+        <option value="135">135</option>
+      </select>
+    </td>
+    <td class="calc subtotal">0.000</td>
+  `;
+  tbody.appendChild(row);
   calculate();
+}
 
-})();
+function calculate(){
+  let total=0;
+
+  document.querySelectorAll("#tableBody tr").forEach(row=>{
+    const width=parseFloat(row.querySelector(".width").value)||0;
+    const height=parseFloat(row.querySelector(".height").value)||0;
+    const price=parseFloat(row.querySelector(".price").value)||0;
+    const subtotal=width*height*price;
+
+    row.querySelector(".subtotal").textContent=subtotal.toFixed(3);
+    total+=subtotal;
+  });
+
+  const discount=parseFloat(document.getElementById("discount").value)||0;
+  const addition=parseFloat(document.getElementById("addition").value)||0;
+
+  const net=total*(1-discount/100+addition/100);
+  const adjustment=net-total;
+
+  document.getElementById("total").textContent=total.toFixed(3);
+  document.getElementById("adjustment").textContent=adjustment.toFixed(3);
+  document.getElementById("netTotal").textContent=net.toFixed(3);
+}
+
+function clearAll(){
+  document.getElementById("tableBody").innerHTML="";
+  document.getElementById("discount").value=0;
+  document.getElementById("addition").value=0;
+
+  for(let i=0;i<50;i++){
+    addRow();
+  }
+  calculate();
+}
+
+for(let i=0;i<50;i++){
+  addRow();
+}
+calculate();
 </script>
 
 </body>
