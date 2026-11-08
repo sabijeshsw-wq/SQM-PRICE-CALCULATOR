@@ -39,16 +39,6 @@ input:focus{outline:2px solid #84adff;border-color:#2e67d1}
 <body>
 <div class="wrap">
 <header>
- <div><h1>SQM Price Calculator</h1><div class="sub">Enter dimensions in metres and rate per square metre.</div></div>
- <div class="actions"><button class="add" id="addRow">+ Add row</button><button class="reset" id="reset">Clear calculator</button></div>
-</header>
-<section class="panel">
- <div class="table-wrap">
-  <table>
-   <thead><tr><th>SL. NO.</th><th>WIDTH (M)</th><th>HEIGHT (M)</th><th>PRICE (KD / SQM)</th><th>SUB TOTAL (KD)</th></tr></thead>
-   <tbody id="items"></tbody>
-  </table>
- </div>
  <div class="hint">Subtotal = Width × Height × Price per SQM. Empty rows are ignored.</div>
 </section>
 <section class="panel">
@@ -61,6 +51,17 @@ input:focus{outline:2px solid #84adff;border-color:#2e67d1}
   <div class="metric"><label>ADJUSTMENT</label><strong id="adjustment">KD 0.000</strong></div>
   <div class="metric net"><label>NET TOTAL (KD)</label><strong id="net">KD 0.000</strong></div>
  </div>
+ <div><h1>SQM Price Calculator</h1><div class="sub">Enter dimensions in metres and rate per square metre.</div></div>
+ <div class="actions"><button class="add" id="addRow">+ Add row</button><button class="reset" id="reset">Clear calculator</button></div>
+</header>
+<section class="panel">
+ <div class="table-wrap">
+  <table>
+   <thead><tr><th>SL. NO.</th><th>WIDTH (M)</th><th>HEIGHT (M)</th><th>PRICE (KD / SQM)</th><th>SUB TOTAL (KD)</th></tr></thead>
+   <tbody id="items"></tbody>
+  </table>
+ </div>
+ 
  <div class="hint">Net total = Total price × (1 − Discount% + Addition%). Values are calculated in this browser only and are not uploaded or saved.</div>
 </section>
 </div>
